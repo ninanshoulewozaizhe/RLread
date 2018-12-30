@@ -22,7 +22,7 @@ export default {
   },
   methods: {
     bookurl: function (id) {
-      return 'store/books/' + id.toString() + '?own=' + this.user.bookId.toString()
+      return '/store/books/' + id.toString() + '?own=' + this.user.bookId.toString()
     }
   }
 }

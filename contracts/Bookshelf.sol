@@ -2,7 +2,7 @@ pragma solidity ^0.4.24;
 
 contract Bookshelf {
     struct Reader {
-        string book;
+        uint bookId;
         bool hasBook;
         uint nowKeepingDays;
         uint mostKeepingDays;
@@ -14,7 +14,7 @@ contract Bookshelf {
         uint paragraph;
     }
 
-    mapping(address => Reader) Readers;
+    mapping(address => Reader) public Readers;
     address internal owner;
 
 
@@ -25,9 +25,9 @@ contract Bookshelf {
         owner = msg.sender;
     }
 
-    function putAbookIn(address own, address reader, string bookname) public returns (string) {
+    function putAbookIn(address own, address reader, uint bookId) public {
         require(owner == own, RightWarn);
-        Readers[reader].book = bookname;
+        Readers[reader].bookId = bookId;
         Readers[reader].nowKeepingDays = 0;
         Readers[reader].hasBook = true;
         Readers[reader].mostKeepingDays = 0;
@@ -36,7 +36,6 @@ contract Bookshelf {
         Readers[reader].beginTime = now;
         Readers[reader].lastReadTime = now;
         Readers[reader].paragraph = 1;
-        return "done";
     }
 
     function clearbookOfReader(address own, address reader) public {
@@ -67,9 +66,9 @@ contract Bookshelf {
         return Readers[reader].paragraph;
     }
 
-    function GetOwnBookName(address reader) public view returns (string) {
+    function GetOwnBookName(address reader) public view returns (uint) {
         require(Readers[reader].hasBook, NoBookWarn);
-        return Readers[reader].book;
+        return Readers[reader].bookId;
     }
 
     function GetTheNowKeepDays(address reader) public view returns (uint) {

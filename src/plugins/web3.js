@@ -27,7 +27,7 @@ export default {
     }
     let web3 = new Web3(web3Provider)
     Vue.prototype.$web3 = web3
-
+    window.$web3 = web3
     // 初始化合约对象
     let contracts = {}
     let bookShelf = contract(BookShelfArtifact)
@@ -35,9 +35,11 @@ export default {
     bookShelf.setProvider(web3.currentProvider)
     RlreadStore.setProvider(web3.currentProvider)
     try {
-      contracts.bookShelf = await bookShelf.at('0xf881449a4d68f45e3d7caea3eb9791b3a037df50')
-      contracts.RlreadStore = await RlreadStore.at('0x55a37754df9d8649031d98494686cdc4760cc396')
+      contracts.bookShelf = await bookShelf.deployed()
+      contracts.RlreadStore = await RlreadStore.deployed()
       let result = await contracts.RlreadStore.SetBookshelf(contracts.bookShelf.address, {from: SEllER.account})
+      console.log(contracts.bookShelf.address)
+      console.log(await contracts.RlreadStore.bookshelf())
       console.log(result)
     } catch (err) {
       console.log(err)

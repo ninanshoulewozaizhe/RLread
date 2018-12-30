@@ -3,8 +3,8 @@
     <el-container>
     <el-header>
       <div>
-        <span>易读英语</span>
-        <el-tooltip class="item" effect="dark" content="离开书店" placement="bottom-start">
+        <img src="../assets/title.png" />
+        <el-tooltip class="item" effect="dark" content="离开书店" placement="bottom-start" v-loading.fullscreen.lock="Loading">
           <el-button class="exit" icon="el-icon-back" @click="exit" circle></el-button>
         </el-tooltip>
       </div>
@@ -44,21 +44,30 @@ export default {
     try {
       console.log('getbook')
       console.log(this.user.account)
-      let result = await this.$contracts.bookShelf.GetOwnBookName.call(this.user.account, {from: this.SELLER.account})
-      console.log(result)
+      let User = await this.$contracts.RlreadStore.Readers(this.user.account)
+      console.log(User)
     } catch (err) {
       console.log(err)
+    }
+  },
+  data () {
+    return {
+      Loading: false
     }
   },
   methods: {
     exit: async function () {
       try {
+        this.Loading = true
         let result = await this.$contracts.RlreadStore.LeaveBookshop({from: this.user.account})
+        this.Loading = false
         console.log(result)
         this.user.account = ''
         this.user.password = ''
+        this.user.bookId = 0
         this.$router.push('/')
       } catch (err) {
+        this.Loading = false
         console.log(err)
       }
     },
@@ -83,6 +92,10 @@ export default {
 </script>
 
 <style scoped>
+.el-header {
+  margin-bottom: 20px;
+}
+
 .el-aside {
   margin-top: 20px;
   width: 200px !important;
@@ -91,6 +104,7 @@ export default {
 }
 .el-menu {
   border-right-width: 0;
+  background-color: transparent;
 }
 
 .el-main {

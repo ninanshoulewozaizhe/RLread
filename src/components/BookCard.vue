@@ -22,6 +22,7 @@ export default {
   width: 200px;
   height: 250px;
   margin: 0 50px 20px 0;
+  background-color: bisque
 }
 
 .el-card__body {
